@@ -55,7 +55,7 @@ export default function Page() {
       });
 
       if (res.ok) {
-        setStatus("✅ Jawaban berhasil dikirim!");
+        setStatus("✅ Terima kasih, jawaban Anda telah kami terima.");
         form.reset();
       } else {
         setStatus("❌ Gagal mengirim data (status: " + res.status + ")");
@@ -119,7 +119,9 @@ export default function Page() {
         </button>
 
         {status && (
-          <p className="text-green-600 mt-2 font-medium">{status}</p>
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mt-4">
+            {status}
+          </div>
         )}
       </form>
     </main>
