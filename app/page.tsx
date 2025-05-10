@@ -26,6 +26,7 @@ export default function Page() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form disubmit!");
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const data: { [key: string]: any } = {};
