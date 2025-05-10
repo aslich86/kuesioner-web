@@ -31,14 +31,38 @@ export default function Page() {
     const data: { [key: string]: any } = {};
     formData.forEach((value, key) => (data[key] = value));
 
-    const res = await fetch("https://script.google.com/macros/s/AKfycbwYQx9JC0ICzqzqvgHaa70KrBbPfckkl3MLUF_KJfM-5pakf_Eeb51-_3_aOnnVydK4/exec", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" },
-    });
+    try {
+      const res = await fetch("https://v1.nocodeapi.com/aslich/google_sheets/WYByJdrdoHpxNnrU?tabId=Sheet1", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          data: [
+            [
+              data.nama,
+              data.nik,
+              data.jk,
+              data.alamat,
+              data.usia,
+              data.tinggi,
+              data.berat,
+              data.bcg,
+              ...Array.from({ length: 17 }, (_, i) => data[`q${i + 1}`]),
+            ],
+          ],
+        }),
+      });
 
-    if (res.ok) setStatus('✅ Jawaban berhasil dikirim!');
-    else setStatus('❌ Gagal mengirim. Coba lagi.');
+      if (res.ok) {
+        setStatus("✅ Jawaban berhasil dikirim!");
+        form.reset();
+      } else {
+        setStatus("❌ Gagal mengirim data (status: " + res.status + ")");
+      }
+    } catch (error) {
+      setStatus("❌ Gagal mengirim: " + (error as Error).message);
+    }
   };
 
   return (
