@@ -26,7 +26,6 @@ export default function Page() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form disubmit!");
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const data: { [key: string]: any } = {};
@@ -44,6 +43,9 @@ export default function Page() {
       ...Array.from({ length: 17 }, (_, i) => data[`q${i + 1}`]),
     ];
 
+    console.log("📦 All Data:", allData);
+    console.log("📊 Jumlah kolom:", allData.length);
+
     if (allData.includes(undefined) || allData.includes("")) {
       setStatus("❌ Masih ada pertanyaan yang belum diisi.");
       return;
@@ -60,9 +62,12 @@ export default function Page() {
         setStatus("✅ Terima kasih, jawaban Anda telah kami terima.");
         form.reset();
       } else {
+        const errorText = await res.text();
+        console.error("❌ Gagal kirim (status:", res.status, ")\n", errorText);
         setStatus("❌ Gagal mengirim data (status: " + res.status + ")");
       }
     } catch (error) {
+      console.error("❌ Error jaringan:", error);
       setStatus("❌ Gagal mengirim: " + (error as Error).message);
     }
   };
