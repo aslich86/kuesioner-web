@@ -55,7 +55,7 @@ export default function Page() {
       const res = await fetch("https://v1.nocodeapi.com/aslich/google_sheets/WYByJdrdoHpxNnrU?tabId=Sheet1", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: [allData] }),
+        body: JSON.stringify({ data: [allData] }), // ✅ FIX: Wrap as 2D array
       });
 
       if (res.ok) {
