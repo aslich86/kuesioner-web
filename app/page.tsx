@@ -31,27 +31,28 @@ export default function Page() {
     const data: { [key: string]: any } = {};
     formData.forEach((value, key) => (data[key] = value));
 
+    const allData = [
+      data.nama,
+      data.nik,
+      data.jk,
+      data.alamat,
+      data.usia,
+      data.tinggi,
+      data.berat,
+      data.bcg,
+      ...Array.from({ length: 17 }, (_, i) => data[`q${i + 1}`]),
+    ];
+
+    if (allData.includes(undefined) || allData.includes("")) {
+      setStatus("❌ Masih ada pertanyaan yang belum diisi.");
+      return;
+    }
+
     try {
       const res = await fetch("https://v1.nocodeapi.com/aslich/google_sheets/WYByJdrdoHpxNnrU?tabId=Sheet1", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          data: [
-            [
-              data.nama,
-              data.nik,
-              data.jk,
-              data.alamat,
-              data.usia,
-              data.tinggi,
-              data.berat,
-              data.bcg,
-              ...Array.from({ length: 17 }, (_, i) => data[`q${i + 1}`]),
-            ],
-          ],
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: [allData] }),
       });
 
       if (res.ok) {
@@ -119,7 +120,11 @@ export default function Page() {
         </button>
 
         {status && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mt-4">
+          <div className={`mt-4 px-4 py-3 rounded font-medium ${
+            status.startsWith("✅")
+              ? "bg-green-100 border border-green-400 text-green-700"
+              : "bg-red-100 border border-red-400 text-red-700"
+          }`}>
             {status}
           </div>
         )}
