@@ -1,4 +1,5 @@
 'use client'
+
 import { useState } from 'react'
 import axios from 'axios'
 
@@ -12,77 +13,102 @@ export default function Home() {
     tinggi: '',
     berat: '',
     bcg: '',
-    q1: '', q2: '', q3: '', q4: '', q5: '', q6: '', q7: '', q8: '', q9: '',
-    q10: '', q11: '', q12: '', q13: '', q14: '', q15: '', q16: '', q17: '', q18: '',
+    q1: '', q2: '', q3: '', q4: '', q5: '', q6: '', q7: '', q8: '',
+    q9: '', q10: '', q11: '', q12: '', q13: '', q14: '', q15: '', q16: '', q17: ''
   })
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      await axios.post('https://sheetdb.io/api/v1/pm1uhyiw5uklc', {
-        data: [form]
-      })
-      alert('Data berhasil dikirim!')
-      setForm({
-        nama: '', nik: '', jk: '', alamat: '', usia: '', tinggi: '', berat: '', bcg: '',
-        q1: '', q2: '', q3: '', q4: '', q5: '', q6: '', q7: '', q8: '', q9: '',
-        q10: '', q11: '', q12: '', q13: '', q14: '', q15: '', q16: '', q17: '', q18: '',
-      })
-    } catch (err) {
-      alert('Terjadi kesalahan saat mengirim data.')
-    }
+
+    const data = [
+      form.nama, form.nik, form.jk, form.alamat, form.usia, form.tinggi, form.berat, form.bcg,
+      form.q1, form.q2, form.q3, form.q4, form.q5, form.q6, form.q7, form.q8,
+      form.q9, form.q10, form.q11, form.q12, form.q13, form.q14, form.q15, form.q16, form.q17
+    ]
+
+    await axios.post('https://sheetdb.io/api/v1/pm1uhyiw5uklc', {
+      data: [data]
+    })
+
+    alert('Data berhasil dikirim!')
+    setForm({
+      nama: '', nik: '', jk: '', alamat: '', usia: '', tinggi: '', berat: '', bcg: '',
+      q1: '', q2: '', q3: '', q4: '', q5: '', q6: '', q7: '', q8: '',
+      q9: '', q10: '', q11: '', q12: '', q13: '', q14: '', q15: '', q16: '', q17: ''
+    })
   }
 
-  const pertanyaan = [
-    "Batuk lebih dari 2 minggu",
-    "Demam",
-    "Berkeringat malam hari tanpa aktivitas",
-    "Sesak napas",
-    "Nyeri dada",
-    "Ada benjolan di leher / bawah rahang / bawah telinga / ketiak",
-    "Batuk berdarah",
-    "Nafsu makan turun (hilang nafsu makan berhari-hari)",
-    "Mudah lelah (sering kecapean tanpa aktivitas berarti)",
-    "Berat badan turun drastis berhari-hari",
-    "Anggota serumah ada yang kena sakit TBC",
-    "Pernah berada satu ruangan dengan pasien TBC (rumah/sekolah/kamar/panti)",
-    "Pernah tinggal serumah minimal 1 malam atau sering tinggal serumah pada siang hari",
-    "Pernah berobat TBC tuntas",
-    "Pernah berobat TBC tapi tidak tuntas",
-    "Orang dengan HIV",
-    "Kurang gizi",
-  ]
-
   return (
-    <main className="p-4 max-w-2xl mx-auto text-sm">
-      <h1 className="text-2xl font-bold mb-4 text-center">Form Skrining TBC Balita Stunting</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {['nama', 'nik', 'jk', 'alamat', 'usia', 'tinggi', 'berat', 'bcg'].map((field) => (
-          <div key={field} className="flex flex-col">
-            <label className="capitalize">{field}</label>
-            <input type="text" name={field} value={(form as any)[field]} onChange={handleChange} className="border px-2 py-1 rounded" required />
-          </div>
-        ))}
+    <main className="p-6 max-w-3xl mx-auto font-sans">
+      <h1 className="text-2xl font-bold mb-6 text-center">Form Kesehatan Anak</h1>
 
-        <h2 className="text-lg font-semibold mt-6">Pertanyaan Gejala & Riwayat</h2>
-        {pertanyaan.map((q, i) => (
-          <div key={i} className="flex flex-col">
-            <label>{i + 1}. {q}</label>
-            <select name={`q${i + 1}`} value={(form as any)[`q${i + 1}`]} onChange={handleChange} className="border px-2 py-1 rounded" required>
-              <option value="">Pilih</option>
-              <option value="Ya">Ya</option>
-              <option value="Tidak">Tidak</option>
-            </select>
-          </div>
-        ))}
+      <form onSubmit={handleSubmit} className="grid gap-4 grid-cols-1 sm:grid-cols-2">
+        {/* Informasi Anak */}
+        <div className="flex flex-col col-span-2 sm:col-span-1">
+          <label>Nama</label>
+          <input type="text" name="nama" value={form.nama} onChange={handleChange} className="border px-3 py-1 rounded" required />
+        </div>
+        <div className="flex flex-col">
+          <label>NIK</label>
+          <input type="text" name="nik" value={form.nik} onChange={handleChange} className="border px-3 py-1 rounded" required />
+        </div>
+        <div className="flex flex-col">
+          <label>Jenis Kelamin</label>
+          <select name="jk" value={form.jk} onChange={handleChange} className="border px-3 py-1 rounded" required>
+            <option value="">Pilih</option>
+            <option value="Laki-laki">Laki-laki</option>
+            <option value="Perempuan">Perempuan</option>
+          </select>
+        </div>
+        <div className="flex flex-col col-span-2">
+          <label>Alamat</label>
+          <input type="text" name="alamat" value={form.alamat} onChange={handleChange} className="border px-3 py-1 rounded" required />
+        </div>
+        <div className="flex flex-col">
+          <label>Usia (Bulan)</label>
+          <input type="number" name="usia" value={form.usia} onChange={handleChange} className="border px-3 py-1 rounded" required />
+        </div>
+        <div className="flex flex-col">
+          <label>Tinggi</label>
+          <input type="number" name="tinggi" value={form.tinggi} onChange={handleChange} className="border px-3 py-1 rounded" required />
+        </div>
+        <div className="flex flex-col">
+          <label>Berat</label>
+          <input type="number" name="berat" value={form.berat} onChange={handleChange} className="border px-3 py-1 rounded" required />
+        </div>
+        <div className="flex flex-col">
+          <label>BCG</label>
+          <select name="bcg" value={form.bcg} onChange={handleChange} className="border px-3 py-1 rounded" required>
+            <option value="">Pilih</option>
+            <option value="Ya">Ya</option>
+            <option value="Tidak">Tidak</option>
+          </select>
+        </div>
 
-        <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 w-full">
-          Kirim
-        </button>
+        {/* Pertanyaan Ya/Tidak */}
+        {[...Array(17)].map((_, i) => {
+          const q = `q${i + 1}` as keyof typeof form
+          return (
+            <div key={q} className="flex flex-col">
+              <label>Pertanyaan {i + 1}</label>
+              <select name={q} value={form[q]} onChange={handleChange} className="border px-3 py-1 rounded" required>
+                <option value="">Pilih</option>
+                <option value="Ya">Ya</option>
+                <option value="Tidak">Tidak</option>
+              </select>
+            </div>
+          )
+        })}
+
+        <div className="col-span-2">
+          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+            Kirim
+          </button>
+        </div>
       </form>
     </main>
   )
